@@ -11,7 +11,7 @@ import { ProgressServiceService } from 'src/app/feature/core/progress-service.se
 
 export class FormUserComponent implements OnInit {
   @Input() userId: number;
-  @Output() afterSave  = new EventEmitter<boolean>();
+  @Output() afterSave = new EventEmitter<boolean>();
 
 
 
@@ -36,10 +36,23 @@ export class FormUserComponent implements OnInit {
     id: number,
     name: string,
     email: string,
-    password: string
+    password: string,
+    phone_number: string,
+    user_roles_id: string,
+    photo: string,
   }
 
   isDisabledForm: boolean = false;
+
+  // MENGAMBIL DATA ROLES
+  roles: [];
+  getRoles() {
+    this.userService.getRoles().subscribe((res: any) => {
+      this.roles = res.data.list;      
+    }, err => {
+      console.log(err);
+    });
+  }
 
 
   // MENGAMBIL id DATA
@@ -52,17 +65,23 @@ export class FormUserComponent implements OnInit {
     });
   }
 
+  getCroppedImage($event) {
+    this.formModel.photo = $event;
+   }
+
   // MEMFORMAT SETELAH EKSEKUSI
   resetForm() {
+    this.getRoles();
     this.formModel = {
       id: 0,
       name: '',
       email: '',
-      password: ''
+      password: '',
+      phone_number: '',
+      user_roles_id: '',
+      photo: '',
     }
-
-    console.log(this.userId);
-    
+   
     if (this.userId != 0) {
       this.activeMode = this.MODE_UPDATE;
       this.getUser(this.userId);
@@ -82,68 +101,68 @@ export class FormUserComponent implements OnInit {
         this.update();
         break;
     }
-    }
-    
-     insert() {
-    
-            this.isDisabledForm = true;
+  }
 
-            this.progressService.startLoading();
-    
-            this.userService.createUser(this.formModel).subscribe((res: any) => {
-    
-              this.landaService.alertSuccess('Berhasil', res.message);
-    
-              this.afterSave.emit();
+  insert() {
 
-              this.progressService.finishLoading();
-    
-              this.isDisabledForm = false;
-    
-            }, err => {
-    
-              this.landaService.alertError('Mohon Maaf', err.error.errors);
+    this.isDisabledForm = true;
 
-              this.progressService.finishLoading();
-    
-              this.isDisabledForm = false;
-    
-            });
-    
-      }
-    
-    
-      update() {
-    
-            this.isDisabledForm = true;
+    this.progressService.startLoading();
 
-            this.progressService.startLoading();
-    
-            this.userService.updateUser(this.formModel).subscribe((res: any) => {
-    
-              this.landaService.alertSuccess('Berhasil', res.message);
-    
-              this.afterSave.emit();
+    this.userService.createUser(this.formModel).subscribe((res: any) => {
 
-              this.progressService.finishLoading();
-    
-              this.isDisabledForm = false;
-    
-            }, err => {
-    
-              this.landaService.alertError('Mohon Maaf', err.error.errors);
+      this.landaService.alertSuccess('Berhasil', res.message);
 
-              this.progressService.finishLoading();
-    
-              this.isDisabledForm = false;
-   
-            });
-    
-      }
+      this.afterSave.emit();
+
+      this.progressService.finishLoading();
+
+      this.isDisabledForm = false;
+
+    }, err => {
+
+      this.landaService.alertError('Mohon Maaf', err.error.errors);
+
+      this.progressService.finishLoading();
+
+      this.isDisabledForm = false;
+
+    });
+
+  }
 
 
-      ngOnChanges(changes: SimpleChange) {
-        this.resetForm();
-        }
+  update() {
+
+    this.isDisabledForm = true;
+
+    this.progressService.startLoading();
+
+    this.userService.updateUser(this.formModel).subscribe((res: any) => {
+
+      this.landaService.alertSuccess('Berhasil', res.message);
+
+      this.afterSave.emit();
+
+      this.progressService.finishLoading();
+
+      this.isDisabledForm = false;
+
+    }, err => {
+
+      this.landaService.alertError('Mohon Maaf', err.error.errors);
+
+      this.progressService.finishLoading();
+
+      this.isDisabledForm = false;
+
+    });
+
+  }
+
+
+  ngOnChanges(changes: SimpleChange) {
+    this.resetForm();
+  }
 
 }

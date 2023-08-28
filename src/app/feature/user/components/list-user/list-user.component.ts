@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { DataTableDirective } from "angular-datatables";
 import Swal from "sweetalert2";
 
 import { UserService } from "../../services/user.service";
+import { DataTableDirective } from "angular-datatables";
 
 @Component({
   selector: "app-list-user",
@@ -26,7 +26,7 @@ export class ListUserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private modalService: NgbModal
-  ) {}
+  ) { }
 
   setDefault() {
     this.filter = {
@@ -38,6 +38,7 @@ export class ListUserComponent implements OnInit {
     this.setDefault();
     this.getUser();
   }
+
 
   getUser() {
     this.dtOptions = {
@@ -55,18 +56,17 @@ export class ListUserComponent implements OnInit {
         this.userService.getUsers(params).subscribe(
           (res: any) => {
             const { list, meta } = res.data;
-
             let number = dtParams.start + 1;
-            list.forEach((val) => (val.no = number++));           
+            list.forEach((val) => (val.no = number++));
             this.listUser = list;
-            
+
             callback({
               recordsTotal: meta.total,
               recordsFiltered: meta.total,
               data: [],
             });
           },
-          (err: any) => {}
+          (err: any) => { }
         );
       },
     };

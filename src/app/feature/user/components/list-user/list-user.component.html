@@ -39,7 +39,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let user of listUser">
+                            <tr *ngFor="let user of listUser;">
                                 <td>{{user.no}}</td>
                                 <td class="vertical-middle">{{user.name}}</td>
                                 <td class="vertical-middle">{{user.email}}</td>
@@ -77,6 +77,6 @@
         </button>
     </div>
     <div class="modal-body">
-        <app-form-user [userId]="userId" (afterSave)="modal.close(); getUser()"></app-form-user>
+        <app-form-user [userId]="userId" (afterSave)="modal.close(); getUser();"></app-form-user>
     </div>
 </ng-template>
